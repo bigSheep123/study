@@ -12,6 +12,7 @@
 #define SPACE " "
 
 char* Argv[NUM];
+
 int code = 0;
 char tmp[SIZE];
 
@@ -91,7 +92,7 @@ void Cd()
     getcwd(tmp,sizeof(tmp));
     // printf("%s",tmp);
     // snprintf(cwd, sizeof(cwd), "PWD=%s", tmp);
-    putenv(tmp);
+    // putenv(tmp);
 }
 
 int IsBuildCommand()
