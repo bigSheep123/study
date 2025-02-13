@@ -3,7 +3,7 @@
 #include <sys/types.h>
 
 #include <stdio.h>
-#include <string.h>
+// #include <string.h>
 int main()
 {
     // const char *msg = "hello fwrite\n";
