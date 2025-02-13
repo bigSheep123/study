@@ -10,8 +10,9 @@
 #define NUM 32
 #define ZERO '\0'
 #define SPACE " "
-char* Argv[32];
+char* Argv[NUM];
 int code = 0;
+char tmp[SIZE];
 
 // char* extract_after_last_slash(const char* str) {
 //     // 查找最后一个反斜杠
@@ -52,6 +53,10 @@ void Init()
     const char* name = getName();
     const char* host = getHostName();
     const char* path = getPath();
+    if(tmp[0])
+    {
+        path = tmp;
+    }
     printf("[%s@%s:%s]$ ",name,host,path);
     fflush(stdout);
 }
@@ -82,8 +87,10 @@ void Cd()
     const char *path = Argv[1];
     // path 一定存在
     chdir(path);
-    char* name = getenv("PWD");
-    printf("%s",name);
+    getcwd(tmp,sizeof(tmp));
+    // printf("%s",tmp);
+    // snprintf(cwd, sizeof(cwd), "PWD=%s", tmp);
+    putenv(tmp);
 }
 
 int IsBuildCommand()
@@ -136,6 +143,12 @@ int main()
         GetCommand(command);
 
         SplitCommand(command);
+
+        // printf("%s\n",Argv[0]);
+        if((Argv[0][0] == 'd')&& (Argv[0][1] == 'h'))
+        {
+            exit(0);
+        }
 
         int flag = IsBuildCommand();
         
