@@ -30,14 +30,14 @@ char tmp[SIZE];
 const char* getHostName()
 {
     const char* host = getenv("HOSTNAME");
-    if(host == NULL) return NULL;
+    if(host == NULL) return "/";
     return host;
 }
 
 const char* getName()
 {
     const char* name = getenv("USER");
-    if(name == NULL) return NULL;
+    if(name == NULL) return "None";
     // const char* name = extract_after_last_slash(str);
     return name;
 }
@@ -45,7 +45,7 @@ const char* getName()
 const char* getPath()
 {
     const char* path = getenv("PWD");
-    if(path == NULL) return  NULL;
+    if(path == NULL) return "None";
     return  path;
 }
 
@@ -91,7 +91,7 @@ void Cd()
     getcwd(tmp,sizeof(tmp));
     // printf("%s",tmp);
     // snprintf(cwd, sizeof(cwd), "PWD=%s", tmp);
-    putenv(tmp);
+    // putenv(tmp);
 }
 
 int IsBuildCommand()
@@ -128,7 +128,12 @@ void Execute()
     else
     {
         int status = 0;
-        waitpid(id,&status,0);
+        pid_t rid = waitpid(id,&status,0);
+        if(rid > 0)
+        {
+            code = WEXITSTATUS(status);
+            if(code != 0) printf("%s:%s:%d\n", Argv[0], strerror(code), code);
+        }
     }
 
 }
