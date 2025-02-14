@@ -1,0 +1,17 @@
+total 80
+drwxr-xr-x  2 dh dh  4096 Feb 15 00:45 .
+drwxr-xr-x 17 dh dh  4096 Feb 14 17:59 ..
+-rw-r--r--  1 dh dh    70 Feb 14 18:40 Makefile
+-rw-r--r--  1 dh dh     0 Feb 15 00:45 a.txt
+-rw-r--r--  1 dh dh    24 Feb 15 00:41 a.txt.txt
+-rw-r--r--  1 dh dh   422 Feb 15 00:40 hello.txt
+-rw-r--r--  1 dh dh   386 Feb 14 21:04 log.txt
+-rwxr-xr-x  1 dh dh 22440 Feb 15 00:42 myshell
+-rw-r--r--  1 dh dh  5136 Feb 15 00:39 myshell.c
+-rwxr-xr-x  1 dh dh 16960 Feb 14 21:02 test
+-rw-r--r--  1 dh dh   232 Feb 15 00:17 test.c
+"hello"
+"hello"
+"hello"
+"hello"
+"hello"

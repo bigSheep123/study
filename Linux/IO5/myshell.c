@@ -39,6 +39,7 @@ int redir_type;
 //     }
 // }
 
+
 const char* getHostName()
 {
     const char* host = getenv("HOSTNAME");
@@ -179,7 +180,7 @@ void SkipSpace(char* command,size_t i)
         // command[i] = ' ';
         i++;
     }
-    command[n] = '\0';
+    command[n] = 0;
     // while(command[i] != ' ')
     // {
     //     command[i] = ' ';
@@ -197,6 +198,7 @@ void GetfileName(char* command)
     {
         if(command[i] == '>')
         {
+// 代码最大的一个bug，其实就在这步，其实直接让 command[i] = 0;就直接解决了，但是就这样吧 okk finish
             command[i] = ' ';
             i++;
             redir_type = Out_Redir;
