@@ -1,0 +1,2 @@
+printf, fd: 3
+fprintf, fd: 3
