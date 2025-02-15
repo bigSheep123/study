@@ -10,6 +10,7 @@ int main()
 
     const char *str = "hello bit";
     int cnt = 5;
+    printf("%lu",strlen(str));
     char buffer[128];
     while (cnt)
     {

@@ -1,10 +1,12 @@
 #include "mystdio.h"
 #include <assert.h>
+
 myFILE* my_fopen(const char* path,const char* mode)
 {
     int flag = 0;
     int isCreate = 0;
     mode_t denf = 0666;
+
     if(strcmp("r",mode) == 0)
     {
         flag = (O_RDONLY);
@@ -36,7 +38,7 @@ myFILE* my_fopen(const char* path,const char* mode)
         perror("malloc failed");
     fp->_fileno = fd;
     fp->cap = SIZE;
-    fp->flags =FLUSH_LINE;
+    fp->flags = FLUSH_LINE;
 
     fp->pos = 0;
     // int fileno = open(path,flag);
@@ -47,9 +49,12 @@ myFILE* my_fopen(const char* path,const char* mode)
 
 size_t my_fwrite(myFILE*fp,const char* buf,size_t n)
 {
+    // char* buf = "hello world\n" strlen() 没有算上 '\0'
     memcpy(fp->buf +fp->pos,buf,n);
     fp->pos += n;
 
+    //    & : 刷新方式是行刷新  且  缓冲区中的最后一个字节是 '\n'
+    // 才会进行行刷新
     if((fp->flags&FLUSH_LINE)&& fp->buf[fp->pos-1] == '\n')
     {
         my_fflush(fp);

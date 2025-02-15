@@ -8,9 +8,9 @@
 //  r   O_RDONLY
 //  a+  O_APPEND O_CREAT  O_WRONLY 
 #define SIZE 1024
-#define FLUSH_NOW 1
-#define FLUSH_LINE 2
-#define FLUSH_FULL 4
+#define FLUSH_NOW 1     // 0001
+#define FLUSH_LINE 2    // 0010
+#define FLUSH_FULL 4    // 0100
 
 struct _FILE
 {
