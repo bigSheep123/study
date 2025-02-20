@@ -1,61 +1,45 @@
-// 实现一个进程池
-#include<iostream>
-#include <unistd.h>
-#include<vector>
+// 形参类型和命名规范
+// const &: 输出
+// & : 输入输出型参数
+// * : 输出型参数
+//  task_t task: 回调函数
+
+// 创建一个进程池 
+#include"Task.hpp"
+
 class Channel
 {
-private:
-    int _wfd;
-    pid_t _subprocessid;
-    std::string _name;
+
 };
 
-// 形参类型和命名规范
-// const &：输出
-// & ：输入输出型参数
-// * 输出型参数
-void CreateChannel(int num,std::vector<Channel>*channels)
+// 先描述再组织 先描述我约束一个进程池的一些条件，再通过vector进行组织起来
+void CreateChannels(std::vector<Channel>* channels,int n)
 {
-    for(int i = 0;i < num; i++)
+    for(int i = 0; i < n; i++)
     {
-        // 创建管道
         int pipefd[2] = {0};
-        int n = pipe(pipefd);
-        if(n < 0)
-            exit(1);
+        pipe(pipefd);
         // 创建子进程
         pid_t id = fork();
-        if(id == 0)
+        if(id < 0)
         {
+            // 子进程需要干的事情
+            // 子进程是需要去读，父进程需要去写，来完成整个过程
 
         }
 
-        // 构建 channel 名称
-
-        // 父进程
-        close(pipefd[2]);
-        channels->push_back(Channel());
+        close(pipefd[0]);
     }
 }
 
-
 int main(int argc,char* argv[])
 {
-    if(argc != 2)
-    {
-        std::cerr<<"argv nums must to be 2"<<std::endl;
-    }
-
+    if(argc!= 2)
+        std::cerr<<"the argc must to be 2!!!"<<std::endl;
+    
+    int num = atoi(argv[1]);
+    // std::cout<<num<<std::endl;
     std::vector<Channel> channels;
-
-    // 创建信道和子进程
-    CreateChannel(num,&channels);
-    int n = atoi(argv[1]);
-    for(int i = 0; i < n; i++)
-    {
-        // std::cout<<n<<std::endl;
-        channels.push_back(Channel());
-    }
-
-    return 0;
+    
+    CreateChannels(&channels,num);
 }
