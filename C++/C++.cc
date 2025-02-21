@@ -14,4 +14,4 @@ namespace my{
 struct option arr[] =
 {
     {"mem2reg",no_argument,0,4}
-};qaaaaaa
+};

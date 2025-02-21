@@ -6,14 +6,38 @@
 
 // 创建一个进程池 
 #include"Task.hpp"
+#include <sched.h>
+
+#define N 10
 
 class Channel
 {
+public:
+    Channel(std::string name,int wfd,pid_t pid)
+    :_name(name) , _wfd(wfd), _pid(pid)
+    {}
 
+    std::string GetName() { return _name; }
+    int GetWfd() { return _wfd; }
+    pid_t GetPid() { return _pid; }
+
+    void Close()
+    {
+        close(_wfd);
+    }
+
+    void Print()
+    {
+        std::cout<<GetName()<<" "<<GetWfd()<<" "<<GetPid()<<std::endl;
+    }
+private:
+    std::string _name;
+    int _wfd;
+    pid_t _pid;
 };
 
 // 先描述再组织 先描述我约束一个进程池的一些条件，再通过vector进行组织起来
-void CreateChannels(std::vector<Channel>* channels,int n)
+void CreateChannels(std::vector<Channel>* channels,int n,task_t task)
 {
     for(int i = 0; i < n; i++)
     {
@@ -21,14 +45,81 @@ void CreateChannels(std::vector<Channel>* channels,int n)
         pipe(pipefd);
         // 创建子进程
         pid_t id = fork();
-        if(id < 0)
+        if(id == 0)
         {
+            // sleep(1000);
             // 子进程需要干的事情
             // 子进程是需要去读，父进程需要去写，来完成整个过程
-
+            close(pipefd[1]);
+            // 孩子只需要去执行任务
+            dup2(pipefd[0],0);
+            task();
+            
+            close(pipefd[0]);
+            exit(0);
         }
 
         close(pipefd[0]);
+        // 给子进程起一个名字
+        std::string name = "channel_" + std::to_string(i);
+
+        channels->push_back(Channel(name,pipefd[1],id));
+    }
+}
+
+int ChoseChannel(int size)
+{
+    static int num = 0;
+    int tmp = num % size;
+    num ++;
+    return tmp;
+}
+
+void SendMeg(Channel& channel,int taskId)
+{
+    write(channel.GetWfd(),&taskId,sizeof(taskId));
+}
+
+void CtrlOnceChannel(std::vector<Channel>& channels)
+{
+    // 控制做的工作应该是，选择一个任务，选择一个信道，把任务的0，1，2 写进去
+    sleep(1);
+    int taskId = ChoseTask();
+    int size = channels.size();
+    int channel_index = ChoseChannel(size);
+    SendMeg(channels[channel_index],taskId);
+    std::cout << std::endl;
+    std::cout << "taskcommand: " << taskId << " channel: "              \
+              << channels[channel_index].GetName() << " sub process: "  \
+              << channels[channel_index].GetPid() << std::endl;
+}
+
+
+void CtrlChannels(std::vector<Channel>& channels,int n = -1)
+{
+    // channels[1].GetName(); 
+    // (*channels)[1].GetName();
+    if(n > 0)
+    {
+        while(n--)
+        {
+            CtrlOnceChannel(channels);
+        }
+    }
+    else if( n == -1)
+    {
+        while(1)
+        {
+            CtrlOnceChannel(channels);
+        }
+    }
+}
+
+void FreeChannels(std::vector<Channel>& channels)
+{
+    for(auto& e:channels)
+    {
+        e.Close();
     }
 }
 
@@ -37,9 +128,23 @@ int main(int argc,char* argv[])
     if(argc!= 2)
         std::cerr<<"the argc must to be 2!!!"<<std::endl;
     
-    int num = atoi(argv[1]);
+    // int num = atoi(argv[1]);
+    int num = 5;
     // std::cout<<num<<std::endl;
+    LoadTask();
     std::vector<Channel> channels;
-    
-    CreateChannels(&channels,num);
+    // 创建了进程池
+    CreateChannels(&channels,num,work);
+    // for(auto& e :channels)
+    // {
+    //     e.Print();
+    // }
+    // std::cout<<std::endl;
+    // channels[0].Print();
+    //控制进程池去执行任务
+    CtrlChannels(channels,N);
+
+    FreeChannels(channels);
+
+    return 0;
 }

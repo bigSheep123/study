@@ -29,3 +29,35 @@ void LoadTask()
     Task[2] = Download;
 }
 
+int ChoseTask()
+{
+    return rand() % NUM;
+}
+
+
+void work()
+{
+    // int n;
+    // read(0,&n,sizeof(n));
+    // if(n >=0 && n <=2)
+    // {
+    //     std::cout<<getpid()<<std::endl;
+    //     Task[n]();
+    // }
+
+    while(true)
+    {
+        int command = 0;
+        int n = read(0,&command,sizeof(command));
+        if( n == sizeof(int))
+        {
+            std::cout << "pid is :" << getpid() << "handler task" <<std::endl;
+        }
+        else if(n == 0)  // 读取的时候，当写端关闭的时候，默认会读到 0 
+        {
+            std::cout<<"sub process :" << getpid() << " quit" <<std::endl;
+            break;
+        }
+    }
+}
+
