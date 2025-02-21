@@ -51,7 +51,11 @@ void work()
         int n = read(0,&command,sizeof(command));
         if( n == sizeof(int))
         {
-            std::cout << "pid is :" << getpid() << "handler task" <<std::endl;
+            // std::cout<<"hello world"<<std::endl;
+             if (command < 0 || command > 2)
+                return;
+            Task[command]();
+            std::cout << "pid is :" << getpid() << " handler task" <<std::endl;
         }
         else if(n == 0)  // 读取的时候，当写端关闭的时候，默认会读到 0 
         {

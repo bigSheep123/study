@@ -5,10 +5,11 @@
 //  task_t task: 回调函数
 
 // 创建一个进程池 
-#include"Task.hpp"
+#include "Task.hpp"
 #include <sched.h>
+#include <sys/wait.h>
 
-#define N 10
+#define N 5
 
 class Channel
 {
@@ -25,7 +26,14 @@ public:
     {
         close(_wfd);
     }
-
+    void Wait()
+    {
+        pid_t rid = waitpid(_pid, nullptr, 0);
+        if (rid > 0)
+        {
+            std::cout << "wait " << rid << " success" << std::endl;
+        }
+    }
     void Print()
     {
         std::cout<<GetName()<<" "<<GetWfd()<<" "<<GetPid()<<std::endl;
@@ -47,12 +55,18 @@ void CreateChannels(std::vector<Channel>* channels,int n,task_t task)
         pid_t id = fork();
         if(id == 0)
         {
+            if (!channels->empty())
+            {
+                //第二次之后，开始创建的管道
+                for (auto &channel : *channels)
+                    channel.Close();
+            }
             // sleep(1000);
             // 子进程需要干的事情
             // 子进程是需要去读，父进程需要去写，来完成整个过程
             close(pipefd[1]);
             // 孩子只需要去执行任务
-            dup2(pipefd[0],0);
+            dup2(pipefd[0],0); // 将 新的文件描述符关闭0，将旧的文件描述符pipe[0]去代替新的文件描述符0
             task();
             
             close(pipefd[0]);
@@ -120,7 +134,13 @@ void FreeChannels(std::vector<Channel>& channels)
     for(auto& e:channels)
     {
         e.Close();
+        e.Wait();
+
     }
+    // for(auto& e :channels)
+    // {
+    //     e.Wait();
+    // }
 }
 
 int main(int argc,char* argv[])
@@ -145,6 +165,6 @@ int main(int argc,char* argv[])
     CtrlChannels(channels,N);
 
     FreeChannels(channels);
-
+    // Task[1]();
     return 0;
 }
