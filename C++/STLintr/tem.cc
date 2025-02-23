@@ -1,4 +1,6 @@
+// #include <deque>
 #include<iostream>
+
 using namespace std;
 // // 类模板
 // template<typename T>
@@ -107,3 +109,124 @@ using namespace std;
 //     x.swap(y);
 //     swap(x,y);
 // }
+
+// template members of classes 模板里面镶嵌模板的情况
+
+// class alloc{};
+
+// template<class T,class Alloc=alloc>
+// class vec{
+// public:
+//     typedef T value_type;
+//     // typedef value_type* iterator;
+//     typedef T* iterator;
+
+//     template<class I>
+//     void insert(iterator pos,I first,I last)
+//     {
+//         cout<<"insert"<<endl;
+//     }
+// };
+
+// int main()
+// {
+//     // int a[5] = {1,2,3,4,5};1_9_1_config6
+//     int* a = nullptr;
+//     int* b = nullptr;
+//     vec<int> x;
+//     vec<int>::iterator it;
+
+//     x.insert(it,a,b);
+
+//     return 0;
+// }
+
+// class alloc {
+// };
+
+// template<class T,class Alloc=alloc,size_t Siz = 10>
+// class deque{
+// public:
+//     deque(){
+//         cout<<Siz<<endl;
+//         cout<<"dump()"<<endl;
+//     }
+    
+// };
+
+// // 编译器支持一个template参数可以根据前一个template的参数设置
+// template<class T,class Sequence = deque<T>>
+// class stack{
+// public:
+//     stack(){
+//         cout<<"stack"<<endl;
+//     }
+// private:
+//     Sequence c;
+// };
+
+// int main()
+// {
+//     stack<int> x;
+//     return 0;
+// }
+
+// class alloc{
+// };
+
+// inline size_t __deque_buf_size(size_t n, size_t sz) {
+//     return n != 0 ? n : (sz < 512 ? size_t(512 / sz) : size_t(1));
+// }
+
+// template<class T,class Ref, class Ptr, size_t BufSiz>
+// struct __deque_iterator{
+//     typedef __deque_iterator<T,T&,T*,BufSiz> iterator;
+//     typedef __deque_iterator<T,const T&,const T*,BufSiz> const_iterator;
+//     static size_t buffer_size(){
+//         return __deque_buf_size(BufSiz,sizeof(T));
+//     }
+// };
+
+// template<class T,class Alloc=alloc,size_t BufSiz = 0>
+// class deque1{
+// public:
+//     typedef __deque_iterator<T,T&,T*,BufSiz> iterator2;
+// };
+
+// int main()
+// {
+//     cout << deque1<int>::iterator2::buffer_size()<<endl;
+//     cout<<deque1<int,alloc,64>::iterator2::buffer_size()<<endl;
+
+//     return 0;
+// }
+
+class alloc {
+};
+
+// BufSiz为非类型参数
+template <class T, class Alloc=alloc, size_t BufSiz=0>
+class deque {
+public:
+    deque() {
+        cout << "deque" << " ";
+    }
+};
+
+template<class T, class Sequence>
+class stack;
+
+template<class T,class Sequence>
+bool operator==(const stack<T,Sequence>&x,
+                 const stack<T, Sequence> &y);
+
+template <class T, class Sequence>
+bool operator<(const stack<T, Sequence> &x,
+               const stack<T, Sequence> &y);
+
+template <class T, class Sequence = deque<T>>
+class stack{
+    
+};
+
+
