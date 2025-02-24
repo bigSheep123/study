@@ -112,14 +112,14 @@
 // override 确实是可选择的，但是强烈推荐使用
 
 // 隐藏基类函数
-class Base {
-public:
-    virtual void foo(int x) { /* ... */ }
-};
+// class Base {
+// public:
+//     virtual void foo(int x) { /* ... */ }
+// };
 
-class Derived : public Base {
-public:
-    void foo(double x) {  // ❌ 参数类型不匹配，未加 override，导致隐藏基类函数
-        /* ... */
-    }
-};
+// class Derived : public Base {
+// public:
+//     void foo(double x) {  // ❌ 参数类型不匹配，未加 override，导致隐藏基类函数
+//         /* ... */
+//     }
+// };
