@@ -292,24 +292,3 @@ using namespace std;
 //     std::cout<<obj;
 // }
 
-#include <iostream>
-
-class MyClass {
-private:
-    int value;
-
-public:
-    MyClass(int v) : value(v) {}
-
-    std::ostream& operator<<(std::ostream& os) const
-    {
-        os<<"Value:" <<value;
-        return os;
-    }
-};
-
-int main() {
-    MyClass obj(43);
-    obj.operator<<(std::cout);
-    return 0;
-}
