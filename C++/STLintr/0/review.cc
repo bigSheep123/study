@@ -213,34 +213,70 @@ using namespace std;
 // }
 
 
-#include <iostream>
-using namespace std;
+// #include <iostream>
+// using namespace std;
 
-// 默认分配器 alloc
-class alloc {
-public:
-    void log() { cout << "使用默认分配器" << endl; }
-};
+// // 默认分配器 alloc
+// class alloc {
+// public:
+//     void log() { cout << "使用默认分配器" << endl; }
+// };
 
-// 自定义分配器 my_alloc
-class my_alloc {
-public:
-    void log() { cout << "使用自定义分配器" << endl; }
-};
+// // 自定义分配器 my_alloc
+// class my_alloc {
+// public:
+//     void log() { cout << "使用自定义分配器" << endl; }
+// };
 
-// 模板类 vec，Alloc 的默认类型是 alloc
-template<class T, class Alloc = alloc>
-class vec {
-private:
-    Alloc allocator; // 成员变量：分配器对象
-public:
-    vec() {
-        allocator.log(); // 调用分配器的日志方法
-    }
-};
+// // 模板类 vec，Alloc 的默认类型是 alloc
+// template<class T, class Alloc = alloc>
+// class vec {
+// private:
+//     Alloc allocator; // 成员变量：分配器对象
+// public:
+//     vec() {
+//         allocator.log(); // 调用分配器的日志方法
+//     }
+// };
 
-int main() {
-    vec<int> v1;           // 输出：使用默认分配器
-    vec<int, my_alloc> v2; // 输出：使用自定义分配器
-    return 0;
-}
+// int main() {
+//     vec<int> v1;           // 输出：使用默认分配器
+//     vec<int, my_alloc> v2; // 输出：使用自定义分配器
+//     return 0;
+// }
+
+// #define __STL_FUNCTION_TMPL_PARTIAL_ORDER
+// class alloc {
+// };
+
+// template <class T, class Alloc=alloc>
+// class test{
+// public:
+//     void swap(test<T, Alloc>&) {
+//         cout << "swap()" << endl;
+//     }
+// };
+
+// template <class T, class Alloc=alloc>
+// class vec {
+// public: 
+//     void swap(vec<T, Alloc>&) {
+//         cout << "swap()" << endl;
+//     }
+// };
+// #ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
+// template <class T, class Alloc>
+// inline void swap(vec<T, Alloc>& x, vec<T, Alloc>& y) {
+//     x.swap(y);
+//     cout << "inline swap" << endl;
+// }
+
+// #endif
+// int main()
+// {
+//     vec<int> x, y;
+//     swap(x,y);
+//     test<char> a,b;
+//     swap(a,b);
+//     return 0;
+// }
