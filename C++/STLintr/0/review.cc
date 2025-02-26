@@ -101,66 +101,60 @@ using namespace std;
 //     swap(x, y);
 // }
 
-#include <iostream>
-using namespace std;
 
-class alloc {
-public:
-    template<class T>
-    T* allocate(size_t n) {
-        return static_cast<T*>(::operator new(n * sizeof(T)));
-    }
+// // new 动态内存分配   static_cast 类型转换
+// int main()
+// {
+//     // int * p = new int(10);
+//     // cout<<*p<<endl;
+//     // delete p;  // 释放内存
 
-    template<class T>
-    void deallocate(T* p, size_t) {
-        ::operator delete(p);
-    }
-};
+//     // [nodiscard] ::operator new(sizeof(int));
+//     // void* raw_mem =::operator new(sizeof(int));
+//     // // operator new 允许在分配内存后动手控制对象的构造
 
-template<class T, class Alloc = alloc>
-class vec {
-private:
-    T* data;         // 指向动态数组的指针
-    size_t capacity; // 当前分配的容量
-    Alloc allocator; // 分配器对象
+//     // //  static_cast类型转换   明确定义类型转换
+//     // int* p = static_cast<int*>(raw_mem);
+//     // *p = 10;
+//     // std::cout<<*p;
+//     // ::operator delete(raw_mem);
 
-public:
-    // 默认构造函数
-    vec() : data(nullptr), capacity(0) {}
+//     double d = 3.14;
+//     int i = static_cast<int>(d);
+//     cout<<i<<endl;
+// }
 
-    // 带初始容量的构造函数
-    explicit vec(size_t n) {
-        data = allocator.template allocate<T>(n); // 分配内存
-        capacity = n;
-        // 构造对象（此处简化，假设 T 是默认构造的）
-        for (size_t i = 0; i < n; ++i) {
-            new (&data[i]) T(); // placement new 构造对象
-        }
-    }
+// class Base{  
+// public:
+//     Base()
+//     {
+//         cout << "Base()" << endl;
+//     }
 
-    // 析构函数
-    ~vec() {
-        if (data) {
-            // 析构所有对象
-            for (size_t i = 0; i < capacity; ++i) {
-                data[i].~T();
-            }
-            // 释放内存
-            allocator.deallocate(data, capacity);
-        }
-    }
+//     virtual void Print() { cout<<"Base Print"<<endl; }
+// };
+// class Derived :public Base 
+// {
+// public:
+//     Derived()
+//     {
+//         cout<<"Derived()" <<endl;
+//     }
 
-    // 交换两个 vec 的内容
-    void swap(vec<T, Alloc>& other) {
-        std::swap(data, other.data);
-        std::swap(capacity, other.capacity);
-        cout << "swap()" << endl;
-    }
-};
+//     void Print() override { cout << " Derived Print"<< endl; }
 
-int main() {
-    vec<int> v1(3);  // 创建一个容量为 3 的 vec<int>，使用默认的 alloc
-    // vec<int> v2;
-    // v1.swap(v2);     // 输出 "swap()"
-    return 0;
-}
+//     // void Hlleo() override {}
+// };
+
+// int main()
+// {
+//     Derived* d = new Derived;
+//     // 类层次的上行转换
+//     Base* b = static_cast<Base*> (d);
+//     // 多态
+//     d->Print();
+//     b->Print();
+
+//     return 0;
+// }
+
