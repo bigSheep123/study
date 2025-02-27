@@ -1,4 +1,5 @@
 #include<iostream>
+#include <memory>
 // #include <stack>
 using namespace std;
 #include<vector>
@@ -395,4 +396,190 @@ using namespace std;
 //     // 需要类外初始化
 //     static int value; 
 // };
+
+// class INT 
+// {
+//     friend ostream& operator<<(ostream& os,const INT& i);
+// public:
+//     INT(int value) :_value(value) {}
+
+//     // 前置++
+//     INT& operator++ ()
+//     {
+//         this->_value++;
+//         return *this;
+//     }
+
+//     INT operator++(int) 
+//     {
+//         INT temp = *this;
+//         ++(*this);
+//         return temp;
+//     }
+// private:
+//     int _value = 4;
+// };
+
+// ostream& operator<<(ostream& os,const INT& i)
+// {
+//     os << i._value << endl;
+//     return os;
+// }
+
+// int main()
+// {
+//     INT a (10);
+//     cout<< ++a;
+//     cout<< a++;
+//     cout<< a;
+
+//     return 0;
+// }
+
+//// for_each 与 find
+
+/// for_each 与 find
+
+// namespace sil
+// {
+//     template<class InputIterator,class T>
+//     InputIterator find(InputIterator first,InputIterator last,const T& value)
+//     {
+//         while(first!=last && *first!=value)
+//             ++first;
+//         return first;
+//     }
+
+//     template<class InputIterator, class Function>
+//     InputIterator for_each(InputIterator first, InputIterator last, Function f)
+//     {
+//         while(first!=last)
+//         {
+//             f(*first);
+//             first++;
+//         }
+//         return first;
+//     }
+// }
+
+// template<class T>
+// class MyPrint
+// {
+// public:
+//     void operator() (const T& t)
+//     {
+//         cout<<t <<" ";
+//     }
+// };
+
+// int main()
+// {
+//     vector<int> ia = {0, 1, 2, 3, 4};
+//     vector<int>::iterator it = sil::find(ia.begin(), ia.end(), 4);
+//     if (it!= ia.end()) {
+//         cout << "Found value." << endl;
+//     }
+//     else {
+//         cout << "Not found." << endl;
+//     }
+
+//     sil::for_each(ia.begin(), ia.end(), MyPrint<int>());
+//     return 0;
+// }
+
+/// 啥是仿函数 ： 重载了函数调用符()的类或结构体，为仿函数
+
+
+
+// #include <iostream>
+// using namespace std;
+
+// #define __STL_TEMPLATE_NULL   /* blank */
+
+// template <class Key> struct hashes {
+//     void operator() () {
+//         cout << "hashes<T>" << endl;
+//     }
+// };
+
+// // 以下注释编译不通过，必须遵守c++标准规格，即写出template<>
+// // error: an explicit specialization must be preceded by 'template <>'
+
+// // explicit specialization
+//  template<> struct hashes<char>{
+//     void operator()(){
+//         cout << "hashes<char>" << endl;
+//     }
+// };
+// // 特化类  
+// template<> struct hashes<unsigned char>{
+//     void operator()(){
+//         cout << "hashes<char>" << endl;
+//     }
+// };
+
+// int main() {
+//     hashes<long> t1;
+//     hashes<char> t2;
+//     hashes<unsigned char> t3;
+
+//     t1();
+//     t2();
+//     t3();
+// }
+
+// 编译器允许约束模板友元  则定义为 <>  
+// 友元类型取决于类被初始化的时的类型，但程序必须在类外为友元提供模板定义
+
+// class alloc {};
+
+// template <class T, class Alloc=alloc, size_t BufSiz=0>
+// class deque {
+// public:
+//     deque() {
+//         cout << "deque" << " ";
+//     }
+// };
+
+// template <class T, class Sequence>
+// class stack;
+
+// template <class T, class Sequence>
+// bool operator==(const stack<T, Sequence> &x,
+//                 const stack<T, Sequence> &y);
+
+// template <class T, class Sequence>
+// bool operator<(const stack<T, Sequence> &x,
+//                const stack<T, Sequence> &y);
+
+// template <class T, class Sequence = deque<T>>
+// class stack 
+// {
+//     friend bool operator== <T> (const stack<T> &, const stack<T>&);
+//     friend bool operator< <T> (const stack<T> &, const stack<T> &);
+
+//     friend bool operator== <T> (const stack &, const stack &);
+//     friend bool operator< <T> (const stack &, const stack &);
+
+//     friend bool operator== <> (const stack &, const stack &);
+//     friend bool operator< <> (const stack &, const stack &);
+    
+// };
+
+// template <class T, class Sequence>
+// bool operator==(const stack<T, Sequence> &x, 
+//                 const stack<T, Sequence> &y) {
+//     // error: cannot convert 'std::basic_ostream<char>' to 'bool' in return
+//     // return cout << "operator==" << '\t';
+//     cout << "operator==" << '\t';
+//     return true;
+// }
+
+// template <class T, class Sequence>
+// bool operator<(const stack<T, Sequence> &x, 
+//                 const stack<T, Sequence> &y) {
+//     // return cout << "operator<" << '\t';
+//     cout << "operator<" << '\t';
+//     return true;
+// }
 
