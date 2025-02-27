@@ -1,5 +1,8 @@
 #include<iostream>
+// #include <stack>
 using namespace std;
+#include<vector>
+#include<algorithm>
 ///// 模板有类模板 和 函数模板
 
 // template<typename T>
@@ -280,3 +283,116 @@ using namespace std;
 //     swap(a,b);
 //     return 0;
 // }
+
+// template members of classes
+
+// class alloc{
+// };
+
+// template<class T,class Alloc=alloc>
+// class vec{
+// public:
+//     typedef T value_type;
+//     typedef value_type* iterator;
+
+//     template<class U>
+//     void Insert(iterator pos,U f,U l)
+//     {
+//         cout << "Insert" << endl;
+//     }
+// };
+
+// int main()
+// {
+//     int ia[5] = {0,1,2,3,4};
+//     vec<int> x;
+//     vec<int>::iterator it;
+//     x.Insert(it,ia, ia+5);
+//     return 0;
+// }
+
+// 编译器支持一个 template 参数 可以根据前一个 template的参数设置
+
+// class alloc {
+// };
+
+// template <class T, class Alloc=alloc, size_t BufSiz=0>
+// class deque {
+// public:
+//     deque() {
+//         cout << "deque()" << endl;
+//     }
+// };
+
+// template <class T,class Sequence = deque<T>>
+// class stack
+// {
+// public:
+//     stack() {
+//         cout << "stack" << endl;
+//     }
+// private:
+//     Sequence c;
+// };
+
+// int main()
+// {
+//     stack<int> x;
+//     return 0;
+// }
+
+// class alloc {
+// };
+
+// inline size_t __deque_buf_size(size_t n, size_t sz) {
+//     return n != 0 ? n : (sz < 512 ? size_t(512 / sz) : size_t(1));
+// }
+
+// template<class T,class Ref, class Ptr, size_t BufSiz>
+// struct __deque_iterator
+// {
+//     typedef __deque_iterator<T,T&,T*,BufSiz> iterator;
+//     typedef __deque_iterator<T,const T&,const T*,BufSiz> const_iterator;
+//     static size_t buffer_size()
+//     {
+//         return __deque_buf_size(BufSiz,sizeof(T));
+//     }
+// };
+// // BufSiz 为非类型参数
+// // float class-type 内部链接对象 不可以作为非类型模板参数
+// template<class T,class Alloc=alloc,size_t Buf>
+// class deque{
+// public:
+//     // typedef __deque_iterator<T, T &, T *, BufSiz> iterator;
+// };
+
+// 匿名函数对象
+
+// template <typename T>
+// class print {
+// public:
+//     void operator() (const T& elem) {
+//         cout << elem << ' ';
+//     }
+// };
+
+// int main() {
+//     int ia[6] = {0, 1, 2, 3, 4, 5};
+//     vector<int> iv(ia, ia + 6);
+    
+//     // print<int> a;
+//     // print<int>() 是一个匿名对象，不是函数调用
+
+//     // print<int> a;
+//     for_each(iv.begin(), iv.end(), print<int>());
+// }
+
+// template<class T>
+// class Test{
+// public:
+//     static const int con_value = 10;
+//     // static int value = 10;
+//     // 需要类外初始化
+//     static int value; 
+// };
+
