@@ -118,72 +118,131 @@
 /// 父类对象的虚表指针，该虚表指针指向父类的虚表，当执行子类的构造函数时，子类对象的虚表指针被初始化，指向自身的虚表
 
 
+// #include <iostream>
+// #include <stdlib.h>
+// using namespace std;
+
+// class CA
+// {
+// public:
+//     void f()
+//     {
+//         cout << "CA f()" << endl;
+//     }
+//     virtual void ff()
+//     {
+//         cout << "CA ff()" << endl;
+//         f();
+//     }
+// };
+
+// class CB : public CA
+// {
+// public :
+//     virtual void f()
+//     {
+//         cout << "CB f()" << endl;
+//     }
+//     void ff()
+//     {
+//         cout << "CB ff()" << endl;
+//         f();
+//         CA::ff();
+//     }
+// };
+// class CC : public CB
+// {
+// public:
+//     virtual void f()
+//     {
+//         cout << "C f()" << endl;
+//     }
+// };
+
+// int main()
+// {
+//     CB b;
+//     CA *ap = &b;
+//     CC c;
+//     CB &br = c;
+//     CB *bp = &c;
+
+//     ap->f();
+//     cout << endl;
+
+//     b.f();
+//     cout << endl;
+
+//     br.f();
+//     cout << endl;
+
+//     bp->f();
+//     cout << endl;
+
+//     ap->ff();
+//     cout << endl;
+
+//     bp->ff();
+//     cout << endl;
+
+//     return 0;
+// }
+
+// class A
+// {
+// public:
+//     virtual void print() {};
+// };
+// class B :public A
+// {
+// public:
+//     // void print() {};
+// };
+
+// int main()
+// {
+// 	A * b = new B;
+// 	B * c = dynamic_cast<B*>(b);
+// 	return 0;
+// }
+// dynamic_cast 要求操作数必须是多态类型的，即实现中必须带有virtual函数
+// 这个太tmd关键了
+
+// s -> d  如果没有父子关系，返回结果就是null
+// 子类到父类，这是必然成功的
+// 父类到子类，依赖于父类指针是否真实的指向了对象的子类型，标示这是不是一个真实的子类对象
+
+//对象的type_info被存在了虚表的首部，所以要使用dynamic_cast，对象必须有多态，然后运行时期比对要转换的类型是否和type_info中记录的类型相同即可。
+
+
 #include <iostream>
-#include <stdlib.h>
-using namespace std;
+#include <map>
 
-class CA
+int main ()
 {
-public:
-    void f()
-    {
-        cout << "CA f()" << endl;
-    }
-    virtual void ff()
-    {
-        cout << "CA ff()" << endl;
-        f();
-    }
-};
+  std::map<char,int> mymap;
+  std::map<char,int>::iterator it;
 
-class CB : public CA
-{
-public :
-    virtual void f()
-    {
-        cout << "CB f()" << endl;
-    }
-    void ff()
-    {
-        cout << "CB ff()" << endl;
-        f();
-        CA::ff();
-    }
-};
-class CC : public CB
-{
-public:
-    virtual void f()
-    {
-        cout << "C f()" << endl;
-    }
-};
+  mymap['z']=50;
+  mymap['d']=200;
+  mymap['b']=100;
+  mymap['c']=150;
 
-int main()
-{
-    CB b;
-    CA *ap = &b;
-    CC c;
-    CB &br = c;
-    CB *bp = &c;
+  it = mymap.find('b');
+  if (it != mymap.end())
+    std::cout <<it->second << std::endl;
 
-    ap->f();
-    cout << endl;
+//   // print content:
+//   std::cout << "elements in mymap:" << '\n';
+//   std::cout << "a => " << mymap.find('a')->second << '\n';
+//   std::cout << "c => " << mymap.find('c')->second << '\n';
+//   std::cout << "d => " << mymap.find('d')->second << '\n';
 
-    b.f();
-    cout << endl;
+// 自动排序的  按照key值进行排序  first -> key   second -> value
+	for(auto e:mymap)
+	{
+		std::cout <<e.first<<' '<<e.second <<std::endl;
+	}
 
-    br.f();
-    cout << endl;
-
-    bp->f();
-    cout << endl;
-
-    ap->ff();
-    cout << endl;
-
-    bp->ff();
-    cout << endl;
-
-    return 0;
+  return 0;
 }
