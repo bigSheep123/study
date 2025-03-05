@@ -145,3 +145,29 @@
 //     return 0;  
 // }
 
+// #include<algorithm>
+// #include<vector>
+
+// lower_bound 是一种用于在有序序列中查找特定元素下标的常用函数。
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+
+// 序列必须有序，自定义比较逻辑可以，C++可以传入仿函数去做自定义比较逻辑
+// int main() {
+//     std::vector<int> vec = {1, 3, 4, 4, 6, 7, 9};
+//     int target = 4;
+
+//     // 查找第一个不小于 4 的元素位置
+//     auto it = std::lower_bound(vec.begin(), vec.end(), target);
+
+//     if (it != vec.end()) {
+//         std::cout << "第一个不小于 " << target << " 的元素在位置: " << (it - vec.begin());
+//         // 输出: 第一个不小于 4 的元素在位置: 2
+//     } else {
+//         std::cout << "所有元素均小于 " << target;
+//     }
+//     return 0;
+// }
