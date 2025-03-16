@@ -1,6 +1,10 @@
 // C++ copy constructor
 #include<iostream>
 using namespace std;
+#include <queue>
+#include <vector>
+#include <functional>
+
 // class People{
 // private:
 //     int m_age;
@@ -92,4 +96,44 @@ using namespace std;
 
 
 // the left value and the right value
+
+// 优先级队列默认是最大堆，传入仿函数
+
+
+
+// 假设 NodePair 和 NodeContainer 已定义
+// using NodePair = std::pair<int, int>;
+// using NodeContainer = std::vector<NodePair>;
+
+// int main()
+// {
+//     // std::function 是一个通用的函数包装器，可以存储、
+//     //复制和调用任意可调用对象（如函数指针、lambda、仿函数等）
+
+//     // function定义一个函数对象 Comp 类型为bool( , )
+//     // std::function<bool(const NodePair &a1, const NodePair &a2)> Comp;
+
+//     //                                 // 编译期操作符，用于推导表达式类型
+//     //                                 // decltype(Comp)：获取Comp的类型
+//     // std::priority_queue<NodePair, NodeContainer, decltype(Comp)> que(
+//     //     [](const NodePair &a1, const NodePair &a2) -> bool
+//     //     {
+//     //         return a1.second < a2.second;
+//     //     }); // 装入处理好的DefinBlock
+
+//     // std::function<bool(const NodePair &a1, const NodePair &a2)> Comp;
+//     // std::priority_queue<NodePair,NodeContainer,decltype(Comp)> que(
+//     //         [](const NodePair &a1, const NodePair &a2) -> bool
+//     //         {
+//     //             return a1.second < a2.second;
+//     //         });
+
+//     auto comp = [](const NodePair &a1, const NodePair &a2) ->bool {
+//         return a1.second <a2.second;
+//     };
+
+//     std::priority_queue<NodePair,NodeContainer,decltype(comp)> que(comp);
+
+//     return 0;
+// }
 
