@@ -397,3 +397,232 @@
 
 // 如果编译器能在出现的时候知道它的类型，那么就不需要typename，如果必须要
 // 到实例化的时候才能知道它是不是合法，定义的时候就把这个名称作为变量而不是类型。 
+
+
+// void doWork(int);
+// void doWork(float);
+// void doWork(int,int);
+
+// void f(){
+//     doWork(0);
+//     doWork(0.5f);
+//     doWork(0,0);
+// }
+
+// 参数数量相同，类型不同；参数数量不同
+
+// template <typename T> struct DoWork;     // (0) 这是原型
+
+// template <> struct DoWork<int> {};       // (1) 这是 int 类型的"重载"
+// template <> struct DoWork<float> {};     // (2) 这是 float 类型的"重载"
+// template <> struct DoWork<int, int> {};  // (3) 这是 int, int 类型的“重载”
+
+// void f(){
+//     DoWork<int>      i;
+//     DoWork<float>    f;
+//     DoWork<int, int> ii;
+// }
+
+
+// template <typename T> class X      {};
+// template <typename T> class X <T*> {};
+                        // 实参列表，决定了第二天语句是第一条语句的跟班
+
+// 偏特化，必须要符合原型X的基本形式
+
+// 首先，偏特化的模板形参，和原型的模板形参没有任何关系
+// 和原型不同，它的顺序完全不影响模式匹配的顺序，它只是偏特化模式
+
+
+// 不定长的模板参数
+
+// 默认实参 （default arguments）
+
+// template <typename T0, typename T1 = void> struct X {
+//     static void call(T0 const& p0, T1 const& p1);        // 0
+// };
+
+// template <typename T0> struct X<T0>{
+//     static void call(T0 const& p0);    
+// };
+
+// void foo(){
+//     X<int>::call(5);                // 调用函数 1
+//     X<int, float>::call(5, 0.5f);   // 调用函数 0
+// }
+
+// 变参模板  Variadic Template
+
+//template<typename... Ts> class tuple;
+
+// C++的模板时从左向右匹配的，所以不定长参数只能在结尾
+
+// 偏特化时，模板参数列表并不代表匹配顺序，他们只是为
+// 偏特化的模式提供的声明
+
+// #include <type_traits>
+
+// template <typename T> T CustomDiv(T lhs, T rhs) {
+//     // Custom Div的实现
+// }
+
+// template <typename T, bool IsFloat = std::is_floating_point<T>::value> struct SafeDivide {
+//     static T Do(T lhs, T rhs) {
+//         return CustomDiv(lhs, rhs);
+//     }
+// };
+
+// template <typename T> struct SafeDivide<T, true>{     // 偏特化A
+//     static T Do(T lhs, T rhs){
+//         return lhs/rhs;
+//     }
+// };
+
+// template <typename T> struct SafeDivide<T, false>{   // 偏特化B
+//     static T Do(T lhs, T rhs){
+//         return lhs;
+//     }
+// };
+
+// void foo(){
+//     SafeDivide<float>::Do(1.0f, 2.0f);    // 调用偏特化A
+//     SafeDivide<int>::Do(1, 2);          // 调用偏特化B
+// }
+
+
+// #include <type_traits>
+// #include <complex>
+// template<typename T> T CustomDiv(T lhs,T rhs) {
+
+// }
+
+// template <
+//     typename T,
+//     bool IsFloat = std::is_floating_point<T>::value,
+//     bool IsIntegral = std::is_integral<T>::value
+// > struct SafeDivide {
+//     static T Do(T lhs, T rhs) {
+//         return CustomDiv(lhs, rhs);
+//     }
+// };
+
+// template <typename T> struct SafeDivide<T, true, false>{    // 偏特化A
+//     static T Do(T lhs, T rhs){
+//         return lhs/rhs;
+//     }
+// };
+
+// template <typename T> struct SafeDivide<T, false, true>{   // 偏特化B
+//     static T Do(T lhs, T rhs){
+//         return rhs == 0 ? 0 : lhs/rhs;
+//     }
+// };
+
+// void foo(){
+//     SafeDivide<float>::Do(1.0f, 2.0f);                              // 调用偏特化A
+//     SafeDivide<int>::Do(1, 2);                                    // 调用偏特化B
+//     SafeDivide<std::complex<float>>::Do({1.f, 2.f}, {1.f, -2.f}); // 调用一般形式
+// }
+
+// SFINAE
+
+
+// struct X {
+//   typedef float type;
+// };
+
+// template <typename T, typename U>
+// void foo(T t, typename U::type u) {
+//   // ...
+// }
+
+// void callFoo() {
+//   foo<int, X>(5, 5.0); // T == int, typename U::type == X::type == float
+// }
+
+// struct X {
+//   typedef float type;
+// };
+
+// struct Y {
+//   typedef float type2;
+// };
+
+// template <typename T, typename U>
+// void foo(T t, typename U::type u) {
+//   // ...
+// }
+
+// void callFoo() {
+//   foo<int, X>(5, 5.0); // T == int, typename U::type == X::type == int
+//   foo<int, Y>(5, 5.0); // ???
+// }
+
+
+// struct X {
+//   typedef float type;
+// };
+
+// struct Y {
+//   typedef float type2;
+// };
+
+// template <typename T, typename U>
+// void foo(T t, typename U::type u) {
+//   // ...
+// }
+
+// template <typename T, typename U>
+// void foo(T t, typename U::type2 u) {
+//   // ...
+// } 
+// void callFoo() {
+//   foo<int, X>(5, 5.0); // T == int, typename U::type == X::type == int
+//   foo<int, Y>( 1, 1.0 ); // ???
+// }
+
+// 只要有正确的候选，就无视替换失败的做法为 SFINAE
+
+
+// Subsititution failure is not an error
+
+// Failure is not an error
+
+// subsitution 就是将函数模板中的形参替换成实参的过程
+
+
+// counter，一种是普通的整数类型，另外一种是一个复杂对象
+
+#include <type_traits>
+#include <cstdint>
+struct ICounter {
+  virtual void increase() = 0;
+  virtual ~ICounter() {}
+};
+
+struct Counter: public ICounter {
+   void increase() override {
+      // Implements
+   }
+};
+
+template <typename T> void inc_counter(
+  T& counterObj, 
+  typename std::enable_if<
+    std::is_base_of<T, ICounter>::value
+  >::type* = nullptr );
+
+template <typename T> void inc_counter(
+  T& counterInt,
+  typename std::enable_if<
+    std::is_integral<T>::value
+  >::type* = nullptr );
+
+void doSomething() {
+  Counter cntObj;
+  uint32_t cntUI32;
+
+  // blah blah blah
+  inc_counter(cntObj);
+  inc_counter(cntUI32);
+}
