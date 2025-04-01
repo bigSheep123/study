@@ -5,8 +5,6 @@ import urllib
 import urllib2
 import cookielib
 import re
- 
-#山东大学绩点运算
 class SDU:
  
     def __init__(self):
