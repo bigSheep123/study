@@ -1,3 +1,4 @@
+#include <cstring>
 #include <memory>
 namespace Myvector{
 
@@ -40,17 +41,69 @@ namespace Myvector{
         typedef size_t size_type;
 
     public:
-        iterator begin() { return _start;}
+        vector(size_type n)
+            : vectorBase<_Tp>(n)  {}
+        vector() = default;
 
-        iterator end() { return _finish;}
+        // this-> 指针明确告诉属于基类
+        iterator begin() { return this->_start;}
+
+        iterator end() { return this->_finish;}
+
+        const_iterator begin() const { return this->_start; }
+        const_iterator end() const { return this->_finish; }
+
         size_type size() const 
         {
-            return size_type(end()-begin());
+            return size_type( end() - begin() );
         }
 
-        vector(size_type n)
-            :vectorBase(n)
-            {} 
-        vector() = default;
+        void push_back(const value_type value)
+        {
+            if(this->_end_of_storage - this->_finish == 0)
+            {
+                MLLOCA();
+            }
+            *this->_finish = value;
+            this->_finish++; 
+        }
+
+        size_type capacity()
+        {
+            return (size_type)(this->_end_of_storage - this->begin());
+        }
+
+        reference operator[](size_type _n) 
+        {
+            return *(this->_start + _n);
+        }
+
+        vector<_Tp>& operator=(const vector<_Tp>& __x);
+
+        bool is_empty()
+        {
+            return this->_start == this->_finish;
+        }
+    private:
+        void MLLOCA()
+        {
+            size_type old_capacity = capacity();
+            size_type new_capacity = old_capacity != 0 ? old_capacity * 2 : 2;
+            value_type *tmp = new value_type[new_capacity];
+            if(this->_start)
+                memcpy(tmp, this->_start, old_capacity *sizeof(value_type));
+            this->_start = tmp;
+            this->_finish = tmp + old_capacity;
+            this->_end_of_storage = tmp + new_capacity;
+        }
     };
+
+    template <typename _Tp>
+    vector<_Tp>& vector<_Tp>::operator=(const vector<_Tp>& x)
+    {
+        vector<_Tp> vec(x.capacity());
+        memcpy(vec->_start, x.begin(), x.size()*sizeof(value_type));
+        return vec;
+    }
+
 };
